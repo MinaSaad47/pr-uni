@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
             # calculating accuracy
             accuracy = cls.test_accuracy()
-            print(f'\tAccuracy Time: {test_time} %')
+            print(f'\tAccuracy Time: {accuracy} %')
             accuracies.append(accuracy)
 
         pos = np.arange(len(CLS.keys()))
