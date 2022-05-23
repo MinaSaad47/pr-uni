@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn import metrics
 import seaborn as sns
-from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import confusion_matrix, accuracy_score, r2_score
 
 class PolyRegModel:
     def __init__(self, train_data):
@@ -27,6 +27,10 @@ class PolyRegModel:
     def test_accuracy(self):
         return self.__lr.score(self.__x_test, self.__y_pred)
 
+    def r2_score(self):
+        return r2_score(self.__y_test, self.__y_pred)
+
+
 from sklearn.tree import  DecisionTreeClassifier
 class DecisionTreeModel:
     def __init__(self, train_data):
@@ -49,6 +53,9 @@ class DecisionTreeModel:
     def conf_matrix(self):
         return confusion_matrix(self.__y_test, self.__y_pred)
 
+    def r2_score(self):
+        return r2_score(self.__y_test, self.__y_pred)
+
 from sklearn.linear_model import LogisticRegression
 class LogisticRegressionModel:
     def __init__(self, train_data):
@@ -57,7 +64,7 @@ class LogisticRegressionModel:
         self.__y_train = train_data.iloc[:, -1]
 
     def train(self):
-            self.__model.fit(self.__x_train, self.__y_train)
+        self.__model.fit(self.__x_train, self.__y_train)
 
 
     def predict(self, test_data):
@@ -71,10 +78,13 @@ class LogisticRegressionModel:
     def conf_matrix(self):
         return confusion_matrix(self.__y_test, self.__y_pred)
 
+    def r2_score(self):
+        return r2_score(self.__y_test, self.__y_pred)
+
 from sklearn.svm import SVC
 class SVMModel:
     def __init__(self, train_data):
-        self.__model = SVC(probability=True, kernel='rbf', gamma='auto')
+        self.__model = SVC(probability=True, kernel='rbf', gamma='auto', C=1)
         self.__x_train = train_data.iloc[:, :-1]
         self.__y_train = train_data.iloc[:, -1]
 
@@ -92,3 +102,6 @@ class SVMModel:
 
     def conf_matrix(self):
         return confusion_matrix(self.__y_test, self.__y_pred)
+
+    def r2_score(self):
+        return r2_score(self.__y_test, self.__y_pred)

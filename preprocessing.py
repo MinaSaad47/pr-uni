@@ -9,7 +9,7 @@ class Preprocessor:
     def __init__(self, dataset_type='train'):
         self.__dataset_type = dataset_type
 
-    def __preprocess_genre(self, total_data):
+    def __preprocess_genre(self, total_data, target):
         # Handling `Genre` with Mode and OneHotEncoder
         if total_data['Genre'].isnull().all():
             total_data['Genre'] = 0
@@ -20,8 +20,8 @@ class Preprocessor:
         genre = ohe.fit_transform(np.expand_dims(total_data['Genre'], axis=1)).toarray()
         total_data.drop(columns='Genre', inplace=True)
         total_data[ohe.categories_[0]] = genre
-        target_column = total_data['MovieSuccessLevel']
-        total_data.drop(columns='MovieSuccessLevel', inplace=True)
+        target_column = total_data[target]
+        total_data.drop(columns=target, inplace=True)
         total_data = pd.concat([total_data, target_column], axis=1)
         return total_data
 
@@ -108,8 +108,13 @@ class Preprocessor:
         total_data = prep_data
         return total_data
 
-    def preprocess(self, total_data, train_data=None):
-        total_data = self.__preprocess_genre(total_data)
+    def __preprocess_movie_revenue(self, total_data):
+        total_data['MovieRevenue'] = total_data['MovieRevenue'].apply(lambda value: int(value.replace('$', '').replace(',', '')) if not pd.isnull(value) else value)
+        total_data['MovieRevenue'].fillna(total_data['MovieRevenue'].mean(), inplace=True)
+        return total_data
+
+    def preprocess_classification(self, total_data, train_data=None):
+        total_data = self.__preprocess_genre(total_data, 'MovieSuccessLevel')
         total_data = self.__preprocess_mpaa(total_data)
         total_data = self.__preprocess_date(total_data)
         total_data = self.__preprocess_title_and_character_and_director_actor(total_data)
@@ -121,3 +126,15 @@ class Preprocessor:
                     total_data[feature] = 0
         return total_data
 
+    def preprocess_regression(self, total_data, train_data=None):
+        total_data = self.__preprocess_genre(total_data, 'MovieRevenue')
+        total_data = self.__preprocess_mpaa(total_data)
+        total_data = self.__preprocess_date(total_data)
+        total_data = self.__preprocess_title_and_character_and_director_actor(total_data)
+        total_data = self.__preprocess_movie_revenue(total_data)
+        if self.__dataset_type == 'test':
+            for feature in train_data.columns:
+                if not feature in total_data.columns:
+                    total_data.insert(train_data.columns.get_loc(feature), feature, train_data[feature])
+                    total_data[feature] = 0
+        return total_data

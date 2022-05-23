@@ -25,6 +25,9 @@ class LinearRegressionModel:
 
     def mean_squared_error(self):
         return mean_squared_error(self.__y_test, self.__y_pred)
+   
+    def scatterplot(self):
+        sns.scatterplot(x=self.__y_test, y=self.__y_pred)
 
 
 class PolyRegModel:
@@ -51,3 +54,6 @@ class PolyRegModel:
     
     def mean_squared_error(self):
         return mean_squared_error(self.__y_test, self.__y_pred)
+
+    def scatterplot(self):
+        sns.scatterplot(x=self.__y_test, y=self.__y_pred)

@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
-from loading_data import load_data
+from loading_data import load_classification_data
 from preprocessing import Preprocessor
 from classifiers import *
 
@@ -52,12 +52,12 @@ if __name__ == "__main__":
         TRAIN_MOVIE_REVENUE_FILE = os.path.join(parsed_args.train_directory, TRAIN_MOVIE_REVENUE_FILE)
         TRAIN_MOVIE_ACTOR_FILE = os.path.join(parsed_args.train_directory, TRAIN_MOVIE_ACTOR_FILE)
 
-        train_data = load_data(director_file=TRAIN_MOVIE_DIRECTOR_FILE,
+        train_data = load_classification_data(director_file=TRAIN_MOVIE_DIRECTOR_FILE,
                                actor_file=TRAIN_MOVIE_ACTOR_FILE,
                                revenue_file=TRAIN_MOVIE_REVENUE_FILE)
 
         train_pp = Preprocessor()
-        train_data = train_pp.preprocess(train_data)
+        train_data = train_pp.preprocess_classification(train_data)
 
         cls = parsed_args.classifier
 
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         TEST_MOVIE_REVENUE_FILE = os.path.join(parsed_args.test_directory, TEST_MOVIE_REVENUE_FILE)
         TEST_MOVIE_ACTOR_FILE = os.path.join(parsed_args.test_directory, TEST_MOVIE_ACTOR_FILE)
 
-        test_data = load_data(director_file=TEST_MOVIE_DIRECTOR_FILE,
+        test_data = load_classification_data(director_file=TEST_MOVIE_DIRECTOR_FILE,
                               actor_file=TEST_MOVIE_ACTOR_FILE,
                               revenue_file=TEST_MOVIE_REVENUE_FILE)
 
@@ -84,7 +84,7 @@ if __name__ == "__main__":
             (train_data, cls_model) = pickle.load(pic)
 
         test_pp = Preprocessor(dataset_type='test')
-        test_data = test_pp.preprocess(test_data, train_data)
+        test_data = test_pp.preprocess_classification(test_data, train_data)
 
         cls_model.predict(test_data)
         print(f"Accuracy: {cls_model.test_accuracy()}")
@@ -95,23 +95,23 @@ if __name__ == "__main__":
         TRAIN_MOVIE_REVENUE_FILE = os.path.join(parsed_args.train_directory, TRAIN_MOVIE_REVENUE_FILE)
         TRAIN_MOVIE_ACTOR_FILE = os.path.join(parsed_args.train_directory, TRAIN_MOVIE_ACTOR_FILE)
 
-        train_data = load_data(director_file=TRAIN_MOVIE_DIRECTOR_FILE,
+        train_data = load_classification_data(director_file=TRAIN_MOVIE_DIRECTOR_FILE,
                                actor_file=TRAIN_MOVIE_ACTOR_FILE,
                                revenue_file=TRAIN_MOVIE_REVENUE_FILE)
 
         train_pp = Preprocessor()
-        train_data = train_pp.preprocess(train_data)
+        train_data = train_pp.preprocess_classification(train_data)
 
         TEST_MOVIE_DIRECTOR_FILE = os.path.join(parsed_args.test_directory, TEST_MOVIE_DIRECTOR_FILE)
         TEST_MOVIE_REVENUE_FILE = os.path.join(parsed_args.test_directory, TEST_MOVIE_REVENUE_FILE)
         TEST_MOVIE_ACTOR_FILE = os.path.join(parsed_args.test_directory, TEST_MOVIE_ACTOR_FILE)
 
-        test_data = load_data(director_file=TEST_MOVIE_DIRECTOR_FILE,
+        test_data = load_classification_data(director_file=TEST_MOVIE_DIRECTOR_FILE,
                               actor_file=TEST_MOVIE_ACTOR_FILE,
                               revenue_file=TEST_MOVIE_REVENUE_FILE)
 
         test_pp = Preprocessor(dataset_type='test')
-        test_data = test_pp.preprocess(test_data, train_data)
+        test_data = test_pp.preprocess_classification(test_data, train_data)
 
         train_times = []
         test_times = []
